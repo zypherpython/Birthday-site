@@ -1,3 +1,4 @@
+import { useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { SanrioLayer } from './SanrioFloat'
 
@@ -79,7 +80,6 @@ const POEM = [
 
 function PoemLine({ text, delay }: { text: string; delay: number }) {
   if (text === '---') {
-    // 2-second pause rendered as empty space
     return <div style={{ height: 40 }} />
   }
   if (text === '') {
@@ -89,10 +89,10 @@ function PoemLine({ text, delay }: { text: string; delay: number }) {
     <motion.p
       className="poem-text"
       style={{ margin: 0 }}
-      initial={{ opacity: 0, y: 8 }}
+      initial={{ opacity: 0, y: 12 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: '-40px' }}
-      transition={{ duration: 0.8, delay, ease: 'easeOut' }}
+      viewport={{ once: true, margin: '-60px' }}
+      transition={{ duration: 0.9, delay, ease: 'easeOut' }}
     >
       {text}
     </motion.p>
@@ -100,6 +100,21 @@ function PoemLine({ text, delay }: { text: string; delay: number }) {
 }
 
 export function Act5Poem({ onComplete }: Props) {
+  const timerRef = useRef<ReturnType<typeof setInterval>>()
+
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollHeight = document.documentElement.scrollHeight
+      const scrollTop = window.scrollY
+      const clientHeight = window.innerHeight
+      if (scrollTop + clientHeight >= scrollHeight - 100) {
+        clearInterval(timerRef.current)
+      }
+    }
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
+
   return (
     <motion.div
       className="relative min-h-screen overflow-hidden"
@@ -110,14 +125,13 @@ export function Act5Poem({ onComplete }: Props) {
     >
       <SanrioLayer count={4} dark />
 
-      {/* Soft glow orbs */}
       <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
           className="absolute rounded-full blur-3xl"
           style={{
             width: 400,
             height: 400,
-            top: '20%',
+            top: '10%',
             left: '-10%',
             background: 'radial-gradient(circle, rgba(107,33,168,0.12), transparent)',
           }}
@@ -125,17 +139,26 @@ export function Act5Poem({ onComplete }: Props) {
         <div
           className="absolute rounded-full blur-3xl"
           style={{
-            width: 300,
-            height: 300,
-            bottom: '20%',
+            width: 350,
+            height: 350,
+            bottom: '15%',
             right: '-5%',
             background: 'radial-gradient(circle, rgba(159,18,57,0.1), transparent)',
+          }}
+        />
+        <div
+          className="absolute rounded-full blur-3xl"
+          style={{
+            width: 250,
+            height: 250,
+            top: '50%',
+            left: '60%',
+            background: 'radial-gradient(circle, rgba(192,132,252,0.08), transparent)',
           }}
         />
       </div>
 
       <div className="relative z-10 max-w-2xl mx-auto px-6 py-20">
-        {/* Title */}
         <motion.div
           className="mb-16"
           initial={{ opacity: 0, y: -20 }}
@@ -149,26 +172,30 @@ export function Act5Poem({ onComplete }: Props) {
             for you
           </h2>
           <div className="w-16 h-px" style={{ background: 'rgba(192,132,252,0.5)' }} />
+          <p
+            className="mt-4 text-sm"
+            style={{ fontFamily: 'DM Sans, sans-serif', color: 'rgba(192,132,252,0.5)' }}
+          >
+            scroll through ✦
+          </p>
         </motion.div>
 
-        {/* Poem — left-aligned like a letter */}
         <div className="text-left" style={{ paddingLeft: 8 }}>
           {POEM.map((line, i) => (
             <PoemLine
               key={i}
               text={line}
-              delay={0.1}
+              delay={0.08}
             />
           ))}
         </div>
 
-        {/* After last line: 6s, then small faded line */}
         <motion.div
-          className="text-center mt-20"
+          className="text-center mt-20 mb-10"
           initial={{ opacity: 0 }}
           whileInView={{ opacity: 1 }}
           viewport={{ once: true }}
-          transition={{ delay: 1 }}
+          transition={{ delay: 0.5 }}
         >
           <p
             style={{

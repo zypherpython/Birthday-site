@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { SanrioLayer } from './SanrioFloat'
 
@@ -57,20 +57,17 @@ export function Act4AWeChat({ onComplete }: Props) {
   const [buttonsClicked, setButtonsClicked] = useState(false)
   const [finalShown, setFinalShown] = useState(false)
   const [finalLineOnly, setFinalLineOnly] = useState(false)
-  const started = useRef(false)
+  const cancelledRef = useRef(false)
   const bottomRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
-    if (started.current) return
-    started.current = true
-
+    cancelledRef.current = false
     let cancelled = false
 
     async function playSequence() {
       for (let i = 0; i < MESSAGES.length; i++) {
         if (cancelled) return
         const msg = MESSAGES[i]
-        // typing indicator
         setTyping(true)
         await wait(msg.typingMs)
         if (cancelled) return
@@ -79,11 +76,10 @@ export function Act4AWeChat({ onComplete }: Props) {
         await wait(msg.pauseMs)
       }
       if (cancelled) return
-      // Show two buttons
       setButtonsShown(true)
     }
     playSequence()
-    return () => { cancelled = true }
+    return () => { cancelled = true; cancelledRef.current = true }
   }, [])
 
   useEffect(() => {
@@ -95,16 +91,19 @@ export function Act4AWeChat({ onComplete }: Props) {
     setButtonsClicked(true)
     setButtonsShown(false)
 
-    // Kuromi wiggle handled by CSS; then final message
-    setTimeout(async () => {
+    const id = setTimeout(async () => {
+      if (cancelledRef.current) return
       setTyping(true)
       await wait(FINAL_MSG.typingMs)
+      if (cancelledRef.current) return
       setTyping(false)
       setFinalShown(true)
+      if (cancelledRef.current) return
       await wait(FINAL_MSG.pauseMs)
-      // Fade everything except the last line
+      if (cancelledRef.current) return
       setFinalLineOnly(true)
       await wait(5000)
+      if (cancelledRef.current) return
       onComplete()
     }, 1000)
   }

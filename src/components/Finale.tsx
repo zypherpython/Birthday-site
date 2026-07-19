@@ -1,15 +1,16 @@
 import { useEffect, useState } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FloatingChar } from './SanrioFloat'
+import { Confetti } from './Confetti'
 
 interface Props { onRestart: () => void }
 
 const CHARS_POSITIONS = [
-  { style: { bottom: '15%', left: '4%' }, size: 70, opacity: 0.85 },
-  { style: { bottom: '20%', right: '4%' }, size: 66, opacity: 0.85 },
-  { style: { top: '10%', left: '8%' }, size: 60, opacity: 0.8 },
-  { style: { top: '12%', right: '6%' }, size: 58, opacity: 0.8 },
-  { style: { bottom: '40%', left: '10%' }, size: 48, opacity: 0.7 },
+  { style: { bottom: '15%', left: '4%' }, size: 70, opacity: 0.7 },
+  { style: { bottom: '20%', right: '4%' }, size: 66, opacity: 0.7 },
+  { style: { top: '10%', left: '8%' }, size: 60, opacity: 0.65 },
+  { style: { top: '12%', right: '6%' }, size: 58, opacity: 0.65 },
+  { style: { bottom: '40%', left: '10%' }, size: 48, opacity: 0.55 },
 ]
 
 export function Finale({ onRestart }: Props) {
@@ -17,12 +18,14 @@ export function Finale({ onRestart }: Props) {
   const [showSignoff, setShowSignoff] = useState(false)
   const [showChars, setShowChars] = useState(false)
   const [showEaster, setShowEaster] = useState(false)
+  const [showConfetti, setShowConfetti] = useState(false)
 
   useEffect(() => {
     const t1 = setTimeout(() => setShowHeart(true), 500)
     const t2 = setTimeout(() => setShowSignoff(true), 5500)
     const t3 = setTimeout(() => setShowChars(true), 8500)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3) }
+    const t4 = setTimeout(() => setShowConfetti(true), 3500)
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
   }, [])
 
   // Easter egg: if she scrolls back up after sign-off, show whisper
@@ -44,7 +47,7 @@ export function Finale({ onRestart }: Props) {
       animate={{ opacity: 1 }}
       transition={{ duration: 2 }}
     >
-      {/* 2 seconds of emptiness handled by initial fade-in duration */}
+      <Confetti active={showConfetti} />
 
       {/* Main sign-off */}
       <motion.div

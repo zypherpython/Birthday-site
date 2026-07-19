@@ -40,9 +40,8 @@ export function PreBirthdayScreen() {
     >
       <SanrioLayer count={5} dark />
 
-      {/* Starfield dots */}
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        {Array.from({ length: 60 }).map((_, i) => (
+        {Array.from({ length: 80 }).map((_, i) => (
           <motion.div
             key={i}
             className="absolute rounded-full"
@@ -51,7 +50,7 @@ export function PreBirthdayScreen() {
               height: `${Math.random() * 3 + 1}px`,
               top: `${Math.random() * 100}%`,
               left: `${Math.random() * 100}%`,
-              background: 'rgba(253,244,255,0.6)',
+              background: i % 2 === 0 ? 'rgba(253,244,255,0.6)' : 'rgba(192,132,252,0.5)',
             }}
             animate={{ opacity: [0.2, 1, 0.2] }}
             transition={{ duration: 2 + Math.random() * 3, repeat: Infinity, delay: Math.random() * 4 }}
@@ -105,12 +104,13 @@ export function PreBirthdayScreen() {
                   borderColor: 'rgba(192,132,252,0.4)',
                   color: '#fdf4ff',
                   fontFamily: 'Caveat, cursive',
+                  boxShadow: '0 0 20px rgba(107,33,168,0.15)',
                 }}
               >
                 {String(value).padStart(2, '0')}
               </div>
               <span
-                className="text-xs mt-1 uppercase tracking-widest"
+                className="text-xs mt-2 uppercase tracking-widest"
                 style={{ color: '#c084fc', fontFamily: 'DM Sans, sans-serif' }}
               >
                 {label}
