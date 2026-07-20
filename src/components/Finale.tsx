@@ -19,15 +19,13 @@ export function Finale({ onRestart }: Props) {
   const [showChars, setShowChars] = useState(false)
   const [showEaster, setShowEaster] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
-  const [musicReady, setMusicReady] = useState(false)
 
   useEffect(() => {
     const t1 = setTimeout(() => setShowHeart(true), 500)
     const t2 = setTimeout(() => setShowSignoff(true), 5500)
     const t3 = setTimeout(() => setShowChars(true), 8500)
     const t4 = setTimeout(() => setShowConfetti(true), 3500)
-    const t5 = setTimeout(() => setMusicReady(true), 2000)
-    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4); clearTimeout(t5) }
+    return () => { clearTimeout(t1); clearTimeout(t2); clearTimeout(t3); clearTimeout(t4) }
   }, [])
 
   // Easter egg: if she scrolls back up after sign-off, show whisper
@@ -165,36 +163,13 @@ export function Finale({ onRestart }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Music player — top right corner */}
-      <AnimatePresence>
-        {musicReady && (
-          <motion.div
-            className="fixed top-4 right-4 z-50"
-            initial={{ y: -20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ duration: 0.8 }}
-          >
-            <div
-              className="rounded-xl overflow-hidden"
-              style={{
-                background: 'rgba(13,0,20,0.85)',
-                border: '1px solid rgba(192,132,252,0.2)',
-                boxShadow: '0 0 30px rgba(192,132,252,0.15)',
-              }}
-            >
-              <iframe
-                width="260"
-                height="60"
-                src="https://www.youtube.com/embed/GswUBqfinAE?autoplay=1&loop=1&playlist=GswUBqfinAE&controls=1&showinfo=0"
-                title="La leçon particulière"
-                allow="autoplay; encrypted-media"
-                className="block"
-                style={{ filter: 'saturate(0.8)' }}
-              />
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Music — auto-plays on page start */}
+      <audio
+        src="/Birthday-site/finale_song.webm"
+        autoPlay
+        loop
+        className="hidden"
+      />
 
       {/* Replay button (subtle) */}
       <motion.button
