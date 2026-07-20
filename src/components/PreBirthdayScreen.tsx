@@ -73,6 +73,20 @@ export function PreBirthdayScreen() {
           🌸 🎀 🌸
         </motion.div>
 
+        <motion.div
+          initial={{ scale: 0.9, opacity: 0 }}
+          animate={{ scale: 1, opacity: 1 }}
+          transition={{ duration: 1 }}
+          className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto mb-6 overflow-hidden border-4"
+          style={{ borderColor: '#f48fb1', boxShadow: '0 0 40px rgba(244,143,177,0.4)' }}
+        >
+          <img
+            src="/Birthday-site/lockscreen.jpg"
+            alt="lockscreen"
+            className="w-full h-full object-cover"
+          />
+        </motion.div>
+
         <h1
           className="text-5xl md:text-6xl font-bold mb-3 leading-tight"
           style={{ fontFamily: 'Caveat, cursive', color: '#fdf4ff' }}
