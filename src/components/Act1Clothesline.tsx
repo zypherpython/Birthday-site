@@ -1,20 +1,26 @@
-import { useRef, useState } from 'react'
-import { motion } from 'framer-motion'
+import { useRef, useState, useMemo } from 'react'
+import { motion, AnimatePresence } from 'framer-motion'
 import { SanrioLayer } from './SanrioFloat'
 
 interface Props { onComplete: () => void }
 
-// "I love you so much darling" — one word per polaroid
 const WORDS = ['I', 'love', 'you', 'so', 'much', 'darling']
 
 interface CardState { [key: number]: boolean }
 
+const ROTATIONS = Array.from({ length: 6 }, () => (Math.random() - 0.5) * 6)
+
 export function Act1Clothesline({ onComplete }: Props) {
   const [flipped, setFlipped] = useState<CardState>({})
+  const [lightboxIndex, setLightboxIndex] = useState<number | null>(null)
   const scrollRef = useRef<HTMLDivElement>(null)
 
-  function toggleFlip(i: number) {
-    setFlipped(prev => ({ ...prev, [i]: !prev[i] }))
+  function handleTap(i: number) {
+    if (flipped[i]) {
+      setLightboxIndex(i)
+    } else {
+      setFlipped(prev => ({ ...prev, [i]: true }))
+    }
   }
 
   const allFlipped = WORDS.every((_, i) => flipped[i])
@@ -87,15 +93,15 @@ export function Act1Clothesline({ onComplete }: Props) {
                 {/* Polaroid card - flip */}
                 <div
                   className="cursor-pointer select-none"
-                  style={{ perspective: 900, width: 140, height: 170 }}
-                  onClick={() => toggleFlip(i)}
+                  style={{ perspective: 900, width: 140, height: 170, transform: `rotate(${ROTATIONS[i]}deg)` }}
+                  onClick={() => handleTap(i)}
                 >
                   <motion.div
                     style={{ width: '100%', height: '100%', transformStyle: 'preserve-3d', position: 'relative' }}
                     animate={{ rotateY: flipped[i] ? 180 : 0 }}
                     transition={{ duration: 0.6, ease: 'easeInOut' }}
                   >
-                    {/* Front - photo placeholder */}
+                    {/* Front - photo */}
                     <div
                       className="absolute inset-0 rounded-lg p-2 flex flex-col"
                       style={{
@@ -180,6 +186,50 @@ export function Act1Clothesline({ onComplete }: Props) {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Lightbox */}
+      <AnimatePresence>
+        {lightboxIndex !== null && (
+          <motion.div
+            className="fixed inset-0 z-50 flex items-center justify-center"
+            style={{ background: 'rgba(0,0,0,0.85)' }}
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={() => setLightboxIndex(null)}
+          >
+            <motion.div
+              className="relative max-w-[90vw] max-h-[90vh] rounded-2xl overflow-hidden"
+              style={{
+                background: 'white',
+                boxShadow: '0 0 60px rgba(192,132,252,0.3)',
+              }}
+              initial={{ scale: 0.85, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.85, opacity: 0 }}
+              transition={{ duration: 0.35 }}
+              onClick={e => e.stopPropagation()}
+            >
+              <img
+                src={`/Birthday-site/photos/photo${lightboxIndex + 1}.jpeg`}
+                alt={`memory ${lightboxIndex + 1}`}
+                className="max-w-[85vw] max-h-[80vh] object-contain"
+              />
+              <button
+                className="absolute top-3 right-3 w-8 h-8 rounded-full flex items-center justify-center text-sm"
+                style={{
+                  background: 'rgba(0,0,0,0.5)',
+                  color: '#fdf4ff',
+                }}
+                onClick={() => setLightboxIndex(null)}
+              >
+                ✕
+              </button>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </motion.div>
   )
 }
