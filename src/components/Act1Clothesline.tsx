@@ -107,21 +107,17 @@ export function Act1Clothesline({ onComplete }: Props) {
                       }}
                     >
                       <div
-                        className="flex-1 rounded flex items-center justify-center text-xs text-center font-medium mb-2 overflow-hidden"
+                        className="flex-1 rounded flex items-center justify-center overflow-hidden"
                         style={{
                           background: '#fdf4ff',
-                          color: 'rgba(107,33,168,0.5)',
-                          fontFamily: 'DM Sans, sans-serif',
-                          border: '1px dashed rgba(107,33,168,0.25)',
                         }}
                       >
-                        <span className="px-2 opacity-60">📷 add photo</span>
-                      </div>
-                      <div
-                        className="text-center text-xs py-1"
-                        style={{ fontFamily: 'Caveat, cursive', color: '#374151', fontSize: 13 }}
-                      >
-                        Memory {i + 1}
+                        <img
+                          src={`/Birthday-site/photos/photo${i + 1}.jpeg`}
+                          alt={`memory ${i + 1}`}
+                          className="w-full h-full object-cover"
+                          loading="lazy"
+                        />
                       </div>
                     </div>
 
