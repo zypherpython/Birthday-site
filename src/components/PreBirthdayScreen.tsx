@@ -77,28 +77,14 @@ export function PreBirthdayScreen() {
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           transition={{ duration: 1 }}
-          className="flex gap-4 items-center justify-center mx-auto mb-6"
+          className="w-40 h-40 md:w-48 md:h-48 rounded-full mx-auto mb-6 overflow-hidden border-4"
+          style={{ borderColor: '#f48fb1', boxShadow: '0 0 40px rgba(244,143,177,0.4)' }}
         >
-          <div
-            className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4"
-            style={{ borderColor: '#f48fb1', boxShadow: '0 0 30px rgba(244,143,177,0.35)' }}
-          >
-            <img
-              src="/Birthday-site/kid.jpg"
-              alt="kid pic"
-              className="w-full h-full object-cover"
-            />
-          </div>
-          <div
-            className="w-28 h-28 md:w-36 md:h-36 rounded-full overflow-hidden border-4"
-            style={{ borderColor: '#c084fc', boxShadow: '0 0 30px rgba(192,132,252,0.35)' }}
-          >
-            <img
-              src="/Birthday-site/current.jpg"
-              alt="current pic"
-              className="w-full h-full object-cover"
-            />
-          </div>
+          <img
+            src="/Birthday-site/lockscreen.jpg"
+            alt="lockscreen"
+            className="w-full h-full object-cover"
+          />
         </motion.div>
 
         <h1

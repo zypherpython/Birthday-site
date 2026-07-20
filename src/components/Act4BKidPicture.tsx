@@ -69,12 +69,11 @@ export function Act4BKidPicture({ onComplete }: Props) {
                 boxShadow: '0 0 40px rgba(192,132,252,0.15)',
               }}
             >
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl mb-2">👶</span>
-                <p className="text-xs text-center px-4" style={{ color: 'rgba(253,244,255,0.5)', fontFamily: 'DM Sans, sans-serif' }}>
-                  add childhood photo
-                </p>
-              </div>
+              <img
+                src="/Birthday-site/kid.jpg"
+                alt="kid pic"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               <motion.div
                 className="absolute inset-0"
                 animate={{ scale: [1, 1.08, 1] }}
@@ -97,12 +96,11 @@ export function Act4BKidPicture({ onComplete }: Props) {
                 boxShadow: '0 0 40px rgba(159,18,57,0.15)',
               }}
             >
-              <div className="absolute inset-0 flex flex-col items-center justify-center">
-                <span className="text-5xl mb-2">🌸</span>
-                <p className="text-xs text-center px-4" style={{ color: 'rgba(253,244,255,0.5)', fontFamily: 'DM Sans, sans-serif' }}>
-                  add recent photo
-                </p>
-              </div>
+              <img
+                src="/Birthday-site/current.jpg"
+                alt="current pic"
+                className="absolute inset-0 w-full h-full object-cover"
+              />
               <motion.div
                 className="absolute inset-0"
                 animate={{ scale: [1.08, 1, 1.08] }}
