@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { FloatingChar } from './SanrioFloat'
 import { Confetti } from './Confetti'
@@ -19,6 +19,19 @@ export function Finale({ onRestart }: Props) {
   const [showChars, setShowChars] = useState(false)
   const [showEaster, setShowEaster] = useState(false)
   const [showConfetti, setShowConfetti] = useState(false)
+  const [musicOn, setMusicOn] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
+
+  function toggleMusic() {
+    const el = audioRef.current
+    if (!el) return
+    if (musicOn) {
+      el.pause()
+      setMusicOn(false)
+    } else {
+      el.play().then(() => setMusicOn(true)).catch(() => {})
+    }
+  }
 
   useEffect(() => {
     const t1 = setTimeout(() => setShowHeart(true), 500)
@@ -163,13 +176,26 @@ export function Finale({ onRestart }: Props) {
         )}
       </AnimatePresence>
 
-      {/* Music — auto-plays on page start */}
-      <audio
-        src="/Birthday-site/finale_song.webm"
-        autoPlay
-        loop
-        className="hidden"
-      />
+      {/* Music */}
+      <audio ref={audioRef} src="/Birthday-site/finale_song.webm" loop />
+
+      {/* Music toggle — top right */}
+      <motion.button
+        className="fixed top-4 right-4 z-50 w-12 h-12 rounded-full flex items-center justify-center text-lg"
+        style={{
+          background: musicOn ? 'rgba(192,132,252,0.25)' : 'rgba(192,132,252,0.1)',
+          border: '1px solid rgba(192,132,252,0.3)',
+          color: '#fdf4ff',
+        }}
+        initial={{ opacity: 0, scale: 0.8 }}
+        animate={{ opacity: 1, scale: 1 }}
+        transition={{ delay: 1, duration: 0.6 }}
+        whileHover={{ scale: 1.1, background: 'rgba(192,132,252,0.3)' }}
+        whileTap={{ scale: 0.9 }}
+        onClick={toggleMusic}
+      >
+        {musicOn ? '🔊' : '🔇'}
+      </motion.button>
 
       {/* Replay button (subtle) */}
       <motion.button
