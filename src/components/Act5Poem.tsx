@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SanrioLayer } from './SanrioFloat'
 
@@ -100,7 +100,20 @@ function PoemLine({ text, delay }: { text: string; delay: number }) {
 }
 
 export function Act5Poem({ onComplete }: Props) {
+  const [musicOn, setMusicOn] = useState(false)
+  const audioRef = useRef<HTMLAudioElement>(null)
   const timerRef = useRef<ReturnType<typeof setInterval>>()
+
+  function toggleMusic() {
+    const el = audioRef.current
+    if (!el) return
+    if (musicOn) {
+      el.pause()
+      setMusicOn(false)
+    } else {
+      el.play().then(() => setMusicOn(true)).catch(() => {})
+    }
+  }
 
   useEffect(() => {
     const handleScroll = () => {
@@ -226,6 +239,43 @@ export function Act5Poem({ onComplete }: Props) {
           </motion.button>
         </motion.div>
       </div>
+
+      {/* Music */}
+      <audio ref={audioRef} src="/Birthday-site/poem_song.webm" loop />
+
+      {/* Music toggle — top right */}
+      <motion.div
+        className="fixed top-4 right-4 z-50 flex items-center gap-2"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.5, duration: 0.6 }}
+      >
+        <motion.p
+          className="text-xs whitespace-nowrap"
+          style={{
+            fontFamily: 'Caveat, cursive',
+            color: 'rgba(253,244,255,0.5)',
+            fontSize: 13,
+          }}
+          animate={{ opacity: musicOn ? [0.3, 0.7, 0.3] : 0.5 }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          play this shona
+        </motion.p>
+        <motion.button
+          className="w-10 h-10 rounded-full flex items-center justify-center text-base flex-shrink-0"
+          style={{
+            background: musicOn ? 'rgba(192,132,252,0.25)' : 'rgba(192,132,252,0.1)',
+            border: '1px solid rgba(192,132,252,0.3)',
+            color: '#fdf4ff',
+          }}
+          whileHover={{ scale: 1.1, background: 'rgba(192,132,252,0.3)' }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleMusic}
+        >
+          {musicOn ? '🔊' : '🔇'}
+        </motion.button>
+      </motion.div>
     </motion.div>
   )
 }

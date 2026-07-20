@@ -180,22 +180,38 @@ export function Finale({ onRestart }: Props) {
       <audio ref={audioRef} src="/Birthday-site/finale_song.webm" loop />
 
       {/* Music toggle — top right */}
-      <motion.button
-        className="fixed top-4 right-4 z-50 w-12 h-12 rounded-full flex items-center justify-center text-lg"
-        style={{
-          background: musicOn ? 'rgba(192,132,252,0.25)' : 'rgba(192,132,252,0.1)',
-          border: '1px solid rgba(192,132,252,0.3)',
-          color: '#fdf4ff',
-        }}
-        initial={{ opacity: 0, scale: 0.8 }}
-        animate={{ opacity: 1, scale: 1 }}
+      <motion.div
+        className="fixed top-4 right-4 z-50 flex items-center gap-2"
+        initial={{ opacity: 0, x: 20 }}
+        animate={{ opacity: 1, x: 0 }}
         transition={{ delay: 1, duration: 0.6 }}
-        whileHover={{ scale: 1.1, background: 'rgba(192,132,252,0.3)' }}
-        whileTap={{ scale: 0.9 }}
-        onClick={toggleMusic}
       >
-        {musicOn ? '🔊' : '🔇'}
-      </motion.button>
+        <motion.p
+          className="text-xs whitespace-nowrap"
+          style={{
+            fontFamily: 'Caveat, cursive',
+            color: 'rgba(253,244,255,0.5)',
+            fontSize: 13,
+          }}
+          animate={{ opacity: musicOn ? [0.3, 0.7, 0.3] : 0.5 }}
+          transition={{ duration: 2, repeat: Infinity }}
+        >
+          play this shona
+        </motion.p>
+        <motion.button
+          className="w-10 h-10 rounded-full flex items-center justify-center text-base flex-shrink-0"
+          style={{
+            background: musicOn ? 'rgba(192,132,252,0.25)' : 'rgba(192,132,252,0.1)',
+            border: '1px solid rgba(192,132,252,0.3)',
+            color: '#fdf4ff',
+          }}
+          whileHover={{ scale: 1.1, background: 'rgba(192,132,252,0.3)' }}
+          whileTap={{ scale: 0.9 }}
+          onClick={toggleMusic}
+        >
+          {musicOn ? '🔊' : '🔇'}
+        </motion.button>
+      </motion.div>
 
       {/* Replay button (subtle) */}
       <motion.button
