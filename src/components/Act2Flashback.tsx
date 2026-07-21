@@ -33,9 +33,18 @@ export function Act2Flashback({ onComplete }: Props) {
     setDone(true)
   }
 
+  function handleReplay() {
+    if (!videoRef.current) return
+    videoRef.current.currentTime = 0
+    videoRef.current.play()
+    setProgress(0)
+    setPlaying(true)
+    setDone(false)
+  }
+
   return (
     <motion.div
-      className="relative min-h-screen flex flex-col items-center justify-center overflow-hidden px-4"
+      className="relative h-screen flex flex-col items-center justify-center overflow-hidden px-4"
       style={{ background: 'linear-gradient(180deg, #1a0a2e 0%, #2d0a1a 60%, #1a0a2e 100%)' }}
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
@@ -43,21 +52,21 @@ export function Act2Flashback({ onComplete }: Props) {
     >
       <SanrioLayer count={4} dark />
 
-      <div className="relative z-10 w-full max-w-2xl">
+      <div className="relative z-10 w-full max-w-2xl flex flex-col items-center justify-center" style={{ maxHeight: '100dvh' }}>
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
           transition={{ delay: 0.3 }}
-          className="text-center mb-8"
+          className="text-center mb-4"
         >
           <h2
-            className="text-4xl md:text-5xl font-bold mb-2"
+            className="text-3xl md:text-4xl font-bold mb-1"
             style={{ fontFamily: 'Caveat, cursive', color: '#fdf4ff' }}
           >
             Admire yourself for a moment
           </h2>
           <p
-            className="text-base"
+            className="text-sm md:text-base"
             style={{ fontFamily: 'EB Garamond, serif', color: '#c084fc', fontStyle: 'italic' }}
           >
             just watch ✦
@@ -79,7 +88,7 @@ export function Act2Flashback({ onComplete }: Props) {
           {/* Screen */}
           <div
             className="relative w-full bg-black flex items-center justify-center"
-            style={{ aspectRatio: '16/9' }}
+            style={{ aspectRatio: '9/16', maxHeight: '60dvh' }}
           >
             {/* VHS scanlines */}
             <div
@@ -97,7 +106,7 @@ export function Act2Flashback({ onComplete }: Props) {
             {/* Video */}
             <video
               ref={videoRef}
-              className="absolute inset-0 w-full h-full object-cover"
+              className="absolute inset-0 w-full h-full object-contain"
               src="/Birthday-site/memory.mp4"
               playsInline
               onTimeUpdate={handleTimeUpdate}
@@ -128,7 +137,7 @@ export function Act2Flashback({ onComplete }: Props) {
               {done ? formatTime(videoRef.current?.duration ?? 0) : formatTime(videoRef.current?.currentTime ?? 0)}
             </div>
 
-            {/* Play button */}
+            {/* Play / Replay button */}
             {!playing && !done && (
               <motion.button
                 className="absolute rounded-full flex items-center justify-center"
@@ -151,6 +160,28 @@ export function Act2Flashback({ onComplete }: Props) {
                 </svg>
               </motion.button>
             )}
+            {done && (
+              <motion.button
+                className="absolute rounded-full flex items-center justify-center"
+                style={{
+                  width: 64,
+                  height: 64,
+                  background: 'rgba(107,33,168,0.8)',
+                  border: '2px solid rgba(192,132,252,0.5)',
+                  zIndex: 10,
+                }}
+                onClick={handleReplay}
+                whileHover={{ scale: 1.1, background: 'rgba(107,33,168,1)' }}
+                whileTap={{ scale: 0.92 }}
+                initial={{ scale: 0 }}
+                animate={{ scale: 1 }}
+                transition={{ type: 'spring' }}
+              >
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="#fdf4ff">
+                  <path d="M12 5V1L7 6l5 5V7c3.31 0 6 2.69 6 6s-2.69 6-6 6-6-2.69-6-6H4c0 4.42 3.58 8 8 8s8-3.58 8-8-3.58-8-8-8z" />
+                </svg>
+              </motion.button>
+            )}
           </div>
 
           {/* Progress bar */}
@@ -167,7 +198,7 @@ export function Act2Flashback({ onComplete }: Props) {
             </div>
             <div className="flex items-center justify-between">
               <p className="text-xs" style={{ color: '#c084fc', fontFamily: 'Caveat, cursive', fontSize: 14 }}>
-                {done ? '🎞️ keep going ↓' : '🎞️ her, being her'}
+                {done ? '🎞️ replay or continue ↓' : '🎞️ her, being her'}
               </p>
               {!playing && !done && (
                 <button
@@ -189,13 +220,13 @@ export function Act2Flashback({ onComplete }: Props) {
 
         {/* Caption below */}
         <motion.div
-          className="text-center mt-6"
+          className="text-center mt-3"
           initial={{ opacity: 0 }}
           animate={{ opacity: done ? 1 : 0.4 }}
           transition={{ duration: 0.8 }}
         >
           <p
-            className="text-lg mb-6"
+            className="text-base md:text-lg mb-4"
             style={{ fontFamily: 'EB Garamond, serif', color: '#fdf4ff', fontStyle: 'italic' }}
           >
             {done
@@ -204,22 +235,40 @@ export function Act2Flashback({ onComplete }: Props) {
           </p>
 
           {done && (
-            <motion.button
-              className="px-8 py-3 rounded-full font-semibold text-sm"
-              style={{
-                background: 'linear-gradient(135deg, #6b21a8, #9f1239)',
-                color: '#fdf4ff',
-                border: '1px solid rgba(192,132,252,0.4)',
-                fontFamily: 'DM Sans, sans-serif',
-              }}
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              whileHover={{ scale: 1.04 }}
-              whileTap={{ scale: 0.96 }}
-              onClick={onComplete}
-            >
-              keep going ↓
-            </motion.button>
+            <div className="flex gap-3 justify-center">
+              <motion.button
+                className="px-6 py-3 rounded-full font-semibold text-sm"
+                style={{
+                  background: 'rgba(107,33,168,0.5)',
+                  color: '#fdf4ff',
+                  border: '1px solid rgba(192,132,252,0.4)',
+                  fontFamily: 'DM Sans, sans-serif',
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={handleReplay}
+              >
+                ↺ Replay
+              </motion.button>
+              <motion.button
+                className="px-8 py-3 rounded-full font-semibold text-sm"
+                style={{
+                  background: 'linear-gradient(135deg, #6b21a8, #9f1239)',
+                  color: '#fdf4ff',
+                  border: '1px solid rgba(192,132,252,0.4)',
+                  fontFamily: 'DM Sans, sans-serif',
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={onComplete}
+              >
+                keep going ↓
+              </motion.button>
+            </div>
           )}
         </motion.div>
       </div>
