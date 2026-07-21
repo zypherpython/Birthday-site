@@ -42,6 +42,30 @@ export function Act2Flashback({ onComplete }: Props) {
     setDone(false)
   }
 
+  function handleDownload() {
+    const a = document.createElement('a')
+    a.href = '/Birthday-site/memory.mp4'
+    a.download = 'memory.mp4'
+    a.click()
+  }
+
+  async function handleShare() {
+    const shareData = {
+      title: 'for you 🎀',
+      text: 'watch this 🎬',
+      url: window.location.href,
+    }
+    try {
+      if (navigator.share) {
+        await navigator.share(shareData)
+      } else {
+        handleDownload()
+      }
+    } catch {
+      handleDownload()
+    }
+  }
+
   return (
     <motion.div
       className="relative h-screen flex flex-col items-center justify-center overflow-hidden px-4"
@@ -235,7 +259,7 @@ export function Act2Flashback({ onComplete }: Props) {
           </p>
 
           {done && (
-            <div className="flex gap-3 justify-center">
+            <div className="flex flex-wrap gap-3 justify-center">
               <motion.button
                 className="px-6 py-3 rounded-full font-semibold text-sm"
                 style={{
@@ -251,6 +275,38 @@ export function Act2Flashback({ onComplete }: Props) {
                 onClick={handleReplay}
               >
                 ↺ Replay
+              </motion.button>
+              <motion.button
+                className="px-6 py-3 rounded-full font-semibold text-sm"
+                style={{
+                  background: 'rgba(15,15,30,0.6)',
+                  color: '#fdf4ff',
+                  border: '1px solid rgba(192,132,252,0.4)',
+                  fontFamily: 'DM Sans, sans-serif',
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={handleDownload}
+              >
+                ⬇ Download
+              </motion.button>
+              <motion.button
+                className="px-6 py-3 rounded-full font-semibold text-sm"
+                style={{
+                  background: 'linear-gradient(135deg, #e1306c, #f77737)',
+                  color: '#fff',
+                  border: 'none',
+                  fontFamily: 'DM Sans, sans-serif',
+                }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                whileHover={{ scale: 1.04 }}
+                whileTap={{ scale: 0.96 }}
+                onClick={handleShare}
+              >
+                📸 Share
               </motion.button>
               <motion.button
                 className="px-8 py-3 rounded-full font-semibold text-sm"
