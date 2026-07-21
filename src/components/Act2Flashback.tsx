@@ -1,29 +1,36 @@
-import { useState } from 'react'
+import { useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { SanrioLayer } from './SanrioFloat'
+
+function formatTime(s: number): string {
+  const m = Math.floor(s / 60)
+  const sec = Math.floor(s % 60)
+  return `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`
+}
 
 interface Props { onComplete: () => void }
 
 export function Act2Flashback({ onComplete }: Props) {
+  const videoRef = useRef<HTMLVideoElement>(null)
   const [playing, setPlaying] = useState(false)
   const [progress, setProgress] = useState(0)
   const [done, setDone] = useState(false)
 
   function handlePlay() {
-    if (done) return
+    if (done || !videoRef.current) return
+    videoRef.current.play()
     setPlaying(true)
-    const start = Date.now()
-    const total = 8000
-    const tick = setInterval(() => {
-      const elapsed = Date.now() - start
-      const pct = Math.min(elapsed / total, 1)
-      setProgress(pct)
-      if (pct >= 1) {
-        clearInterval(tick)
-        setPlaying(false)
-        setDone(true)
-      }
-    }, 50)
+  }
+
+  function handleTimeUpdate() {
+    if (!videoRef.current) return
+    const pct = videoRef.current.currentTime / videoRef.current.duration
+    setProgress(pct)
+  }
+
+  function handleEnded() {
+    setPlaying(false)
+    setDone(true)
   }
 
   return (
@@ -87,21 +94,15 @@ export function Act2Flashback({ onComplete }: Props) {
               style={{ background: 'radial-gradient(ellipse at center, transparent 55%, rgba(45,10,26,0.7) 100%)' }}
             />
 
-            {/* Video placeholder */}
-            <div
-              className="absolute inset-0 flex items-center justify-center"
-              style={{ background: 'linear-gradient(135deg, #1a0a2e, #2d0a1a)' }}
-            >
-              <div className="text-center">
-                <div className="text-6xl mb-3">🎬</div>
-                <p className="text-sm opacity-50" style={{ color: '#c084fc', fontFamily: 'DM Sans, sans-serif' }}>
-                  Add your video here
-                </p>
-                <p className="text-xs opacity-30 mt-1" style={{ color: '#c084fc', fontFamily: 'DM Sans, sans-serif' }}>
-                  /public/memory.mp4
-                </p>
-              </div>
-            </div>
+            {/* Video */}
+            <video
+              ref={videoRef}
+              className="absolute inset-0 w-full h-full object-cover"
+              src="/Birthday-site/memory.mp4"
+              playsInline
+              onTimeUpdate={handleTimeUpdate}
+              onEnded={handleEnded}
+            />
 
             {/* VHS label */}
             <motion.div
@@ -124,7 +125,7 @@ export function Act2Flashback({ onComplete }: Props) {
               className="absolute bottom-3 right-3 text-xs opacity-60"
               style={{ color: '#c084fc', fontFamily: 'DM Sans, sans-serif', letterSpacing: '0.05em' }}
             >
-              {done ? '00:08 / 00:08' : playing ? `00:0${Math.floor(progress * 8)} / 00:08` : '00:00 / 00:08'}
+              {done ? formatTime(videoRef.current?.duration ?? 0) : formatTime(videoRef.current?.currentTime ?? 0)}
             </div>
 
             {/* Play button */}
